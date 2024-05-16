@@ -1,0 +1,208 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
+#####################################
+# Let's group customizations here
+#####################################
+
+# misc
+/.sass-cache
+/connect.lock
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+challenges-svc.log
+/typings
+.yarnrc
+.eslintcache
+temp-dependencies.json
+
+# Local override configs for IK apps
+**/ik-*/config/.local/*.exs
+**/elixir-*/config/.local/*.exs
+
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
+#####################################
+# Standard(ish) Ignores
+#####################################
+
+# dependencies for all projects
+**/node_modules
+
+# compiled output
+**/dist/
+# **/build/ @FIXME: We're currently committing some builds to monorepo
+**/tmp/
+**/out-tsc/
+**/web-build/
+**/artifacts/
+**/archive/
+**/coverage/
+**/test-results/
+**/.expo/
+
+# Playwright
+**/test-results/
+**/playwright-report/
+**/playwright/.cache/
+**/quarantine
+
+# AWS
+.aws
+!.aws/config
+# CCI aws orb added files to be ignored
+/aws
+/index.js
+/tmp_affected_list.txt
+
+# IDEs and editors
+.vscode/*
+!.vscode/cspell-disable-ignore-snippets.code-snippets
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.vscode/launch.json
+.vscode/extensions.json
+*.code-workspace
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+# cSpell
+.cspell
+
+# EAS
+credentials.json
+
+# Elixir
+/*/**/priv/static/assets/
+
+# DataDog log files
+*.log
+
+# Vagrant
+/.vagrant
+
+# Terragrunt
+**/backend.tf
+**/provider.tf
+
+# @nx-tools/nx-container artifacts when running locally
+**/.nx-container
+
+# System Files
+*/**/*.DS_Store
+.DS_Store
+._.DS_Store
+*.DS_Store
+.docker-sync
+Thumbs.db
+.expo*
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Dotenvs
+.env
+.local.env
+.env.local
+.env.ios
+.env.android
+.envrc
+
+# Use .env.local to set secrets
+!apps/menu-tester-fe/.env
+!apps/menu-tester-svc/.env
+
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
+#####################################
+# REACT NATIVE - Adapted from: https://github.com/facebook/react-native/blob/main/.gitignore
+#####################################
+
+# iOS / CocoaPods
+**/packages/rn-tester/**
+**/packages/react-native/**
+
+# Xcode
+!**/*.xcodeproj
+!**/*.pbxproj
+!**/*.xcworkspacedata
+!**/*.xcsettings
+!**/*.xcscheme
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+**/.xcode.env.local
+
+# Buck
+.buckd
+buck-out
+**/.lsp.buckd
+**/.lsp-buck-out
+
+# Android Studio
+.project
+.settings
+.classpath
+
+# Android
+.idea
+.gradle
+local.properties
+*.iml
+
+# Test generated files
+*.js.meta
+# Test Reports
+/reports
+# Stack Dumps generated when programs crash (Ex. bash.exe.stackdump on Win)
+*.stackdump
+# Root dir shouldn't have Xcode project
+/*.xcodeproj
+# Ruby Gems (Bundler)
+.ruby-version
+/**/.ruby-version
+# @react-native/codegen
+/**/RCTThirdPartyFabricComponentsProvider.*
+# Android memory profiler files
+*.hprof
+# Temporary files created by Metro to check the health of the file watcher
+.metro-health-check*
+# Watchman
+.watchmanconfig
+
+temp.json
+*-task-definition.json
+/target
+.nx/cache
+
+gravy-release/
+apps/menu-tester-fe-e2e/artifacts
