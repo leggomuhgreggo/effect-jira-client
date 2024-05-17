@@ -2,6 +2,9 @@
 
 Wrote this little utility to try out effect. 
 
+![image](https://github.com/leggomuhgreggo/effect-jira-client/assets/2213636/fe5d72b9-ca50-48f9-a189-8a95a81a8720)
+
+
 
 ### Install
 
