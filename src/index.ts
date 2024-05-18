@@ -55,8 +55,8 @@ const fetchRecentActivity = (jql: string, maxResults: number) => {
   return Http.request.post(url).pipe(
     Http.request.textBody(JSON.stringify({ jql, maxResults })),
     Http.request.setHeaders(config.headers),
-    Http.client.fetchOk,
-    Effect.flatMap(Http.response.schemaBodyJson(JiraResponseSchema)),
+    Http.client.fetchOk, // <-- this is awesome ⭐️
+    Effect.flatMap(Http.response.schemaBodyJson(JiraResponseSchema)), // <-- this is also awesome ⭐️
     Effect.map((response) => response.issues)
   );
 };
