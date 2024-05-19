@@ -1,83 +1,37 @@
-import * as Http from "@effect/platform/HttpClient";
-import { Schema } from "@effect/schema";
-import { Console, Effect } from "effect";
 import { NodeRuntime } from "@effect/platform-node";
+import { Console, Effect } from "effect";
+import { Schema } from "@effect/schema";
+
+import { fetchRecentActivity } from "./fetchRecentActivity";
+import { JiraActivitySchema } from "./schema";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ── CONFIG ───────────────────────────────────────────────────────────────────
 
 process.loadEnvFile();
 
-const SUBDOMAIN = process.env.JIRA_SUBDOMAIN;
-const EMAIL = process.env.JIRA_EMAIL;
-const API_KEY = process.env.JIRA_API_KEY;
+const USER = process.env.JIRA_USERNAME;
 
-const USERNAME = `Gregory Westneat`;
-const JQL_QUERY = `assignee = '${USERNAME}' AND updated >= -1d ORDER BY updated DESC`;
+// fetchRecentActivity args
+const JQL_QUERY = `assignee = '${USER}' AND updated >= -1w ORDER BY updated DESC`;
 const MAX_RESULTS = 10;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ── SCHEMA ───────────────────────────────────────────────────────────────────
+// ── MAIN ─────────────────────────────────────────────────────────────────────
 
-// Define the schema to validate the response data from Jira
-const JiraActivitySchema = Schema.Struct({
-  id: Schema.String,
-  key: Schema.String,
-  fields: Schema.Struct({
-    summary: Schema.String,
-    updated: Schema.String,
-  }),
-});
-
-// Define the schema for the overall response
-const JiraResponseSchema = Schema.Struct({
-  issues: Schema.Array(JiraActivitySchema),
-});
-
-// Infer the type from JiraActivitySchema
-type JiraActivity = Schema.Schema.Type<typeof JiraActivitySchema>;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// ── FETCH RECENT ACTIVITY ────────────────────────────────────────────────────
-
-const fetchRecentActivity = (jql: string, maxResults: number) => {
-  const url = `https://${SUBDOMAIN}.atlassian.net/rest/api/2/search`;
-  const config = {
-    headers: {
-      Authorization: `Basic ${Buffer.from(`${EMAIL}:${API_KEY}`).toString(
-        "base64"
-      )}`,
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-  };
-
-  return Http.request.post(url).pipe(
-    Http.request.textBody(JSON.stringify({ jql, maxResults })),
-    Http.request.setHeaders(config.headers),
-    Http.client.fetchOk, // <-- this is awesome ⭐️
-    Effect.flatMap(Http.response.schemaBodyJson(JiraResponseSchema)), // <-- this is also awesome ⭐️
-    Effect.map((response) => response.issues)
-  );
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// ── LOG ACTIVITY ─────────────────────────────────────────────────────────────
-
-const logActivity = (activity: JiraActivity) =>
-  Console.log(
-    `ID: ${activity.id}, Key: ${activity.key}, Summary: ${activity.fields.summary}, Updated: ${activity.fields.updated}`
-  );
-
-// ─────────────────────────────────────────────────────────────────────────────
-// ── MAIN FUNCTION ────────────────────────────────────────────────────────────
-
-const main = fetchRecentActivity(JQL_QUERY, MAX_RESULTS).pipe(
-  Effect.flatMap((activities) =>
-    Effect.all(activities.map(logActivity))
-  ),
+export const main = fetchRecentActivity(JQL_QUERY, MAX_RESULTS).pipe(
+  Effect.flatMap((activities) => Effect.all(activities.map(logActivity))),
   Effect.catchAll((err: unknown) => Console.error(`Error: ${err}`))
 );
 
-// Run the script using NodeRuntime.runMain
-NodeRuntime.runMain(Effect.scoped(main));
+NodeRuntime.runMain(Effect.scoped(main)); // <-- this is where the program is actually run (scoped to avoid issues with leaky processes)
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ── UTILS ────────────────────────────────────────────────────────────────────
+
+type JiraActivity = Schema.Schema.Type<typeof JiraActivitySchema>;
+
+function logActivity(activity: JiraActivity) {
+  const msg = `ID: ${activity.id}, Key: ${activity.key}, Summary: ${activity.fields.summary}, Updated: ${activity.fields.updated}`
+  return Console.log(msg);
+}
