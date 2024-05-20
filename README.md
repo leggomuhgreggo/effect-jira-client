@@ -25,6 +25,7 @@ yarn install
 JIRA_API_KEY
 JIRA_SUBDOMAIN
 JIRA_EMAIL
+JIRA_USERNAME
 ```
 
 ### Run 
